@@ -4,5 +4,4 @@ __pycache__
 env.py
 *.csv
 *.xlsx
-/data
-*s.ipynb
+/notes
