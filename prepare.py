@@ -24,13 +24,12 @@ def basic_clean(string):
         A lower-cased string encoded to ASCII and decoded to UTF-8.
     '''
     # Remove accented characters
-    string = unicodedata.normalize('NFKD', string)\
-    .encode('ascii', 'ignore')\
-    .decode('utf-8', 'ignore')
+    string = unicodedata.normalize('NFKD', string.lower())\
+            .encode('ascii', 'ignore')\
+            .decode('utf-8', 'ignore')
     
     # Remove special characters == Include only alpha-numeric characters
-    cleaned_string = re.sub('[^a-zA-Z0-9]', '', string)\
-                               .lower()
+    cleaned_string = re.sub(r'[^a-z0-9\s]', '', string)
     return cleaned_string
 
 
@@ -106,4 +105,4 @@ def prep_article_data(df, column='', add_to_stopwords=[], remove_from_stopwords=
     
     df['lemmatized'] = df[column].apply(basic_clean).apply(lemmatize)
     
-    return df[['title', column, 'clean', 'stemmed', 'lemmatized']]
+    return df[['title', column, 'stemmed', 'lemmatized', 'clean']]
