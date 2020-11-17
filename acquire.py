@@ -2,6 +2,9 @@ import pandas as pd
 import os
 import time
 import json
+import sys
+
+sys.path.insert(1, './data/')
 
 from bs4 import BeautifulSoup
 from requests import get
@@ -58,7 +61,6 @@ def web_scrape_in_progress(requests, response, start_time):
     print(f'Request: {requests}; Frequency: {requests/elapsed_time:.2f} requests/s')
     clear_output(wait=True)
     return requests
-
 
 
 def get_blog_articles():

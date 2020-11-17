@@ -11,14 +11,24 @@ import pandas as pd
 
 def basic_clean(string):
     '''
+    This function accepts a string and return a normalized string.
     
+    parameters
+    ----------
+    string : str
+        A string to be normalized for natural language processing
+    
+    returns
+    -------
+    cleaned_string : str
+        A lower-cased string encoded to ASCII and decoded to UTF-8.
     '''
     # Remove accented characters
     string = unicodedata.normalize('NFKD', string)\
     .encode('ascii', 'ignore')\
     .decode('utf-8', 'ignore')
     
-    # Remove special characters
+    # Remove special characters == Include only alpha-numeric characters
     cleaned_string = re.sub('[^a-zA-Z0-9]', '', string)\
                                .lower()
     return cleaned_string
@@ -26,7 +36,19 @@ def basic_clean(string):
 
 def tokenize(string):
     '''
+    This function accepts a string and returns a tokenized form of the string
     
+    parameters
+    ----------
+    string : str
+        A string to be tokenized for natural language processing.
+        
+    returns
+    -------
+    tokenized_string
+    
+    returns
+    -------
     '''
     tokenizer = ToktokTokenizer()
     tokenized_string = tokenizer.tokenize(string, return_str=True)
@@ -53,7 +75,7 @@ def lemmatize(string):
     return lemmatized_string
 
 
-def remove_stop_words(string, add_to_stopwords=[], remove_from_stopwords=[]):
+def remove_stopwords(string, add_to_stopwords=[], remove_from_stopwords=[]):
     '''
     
     '''
@@ -68,3 +90,20 @@ def remove_stop_words(string, add_to_stopwords=[], remove_from_stopwords=[]):
     string_without_stopwords = ' '.join(filtered_words)
     
     return string_without_stopwords
+
+
+def prep_article_data(df, column='', add_to_stopwords=[], remove_from_stopwords=[]):
+    '''
+
+    '''
+    df['clean'] = df[column].apply(basic_clean)\
+                            .apply(tokenize)\
+                            .apply(remove_stopwords, 
+                                   add_to_stopwords=add_to_stopwords, 
+                                   remove_from_stopwords=remove_from_stopwords)
+    
+    df['stemmed'] = df[column].apply(basic_clean).apply(stem)
+    
+    df['lemmatized'] = df[column].apply(basic_clean).apply(lemmatize)
+    
+    return df[['title', column, 'clean', 'stemmed', 'lemmatized']]
